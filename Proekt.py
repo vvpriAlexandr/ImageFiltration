@@ -248,36 +248,40 @@ class proektik:
             self.display_image()
     
     def mClose(self):
-        kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (7, 7))
-        closed = cv2.morphologyEx(self.current_image, cv2.MORPH_CLOSE, kernel)
+        if self.current_image is not None:
+            kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (7, 7))
+            closed = cv2.morphologyEx(self.current_image, cv2.MORPH_CLOSE, kernel)
 
-        self.current_image = closed
-        self.display_image()
+            self.current_image = closed
+            self.display_image()
 
     # яркость
     def brightness(self):
-        brightness = float(self.brightness_entry.get())
+        if self.current_image is not None:
+            brightness = float(self.brightness_entry.get())
 
-        after_b = cv2.convertScaleAbs(self.current_image, beta=brightness)
-        self.current_image = after_b
-        self.display_image()
+            after_b = cv2.convertScaleAbs(self.current_image, beta=brightness)
+            self.current_image = after_b
+            self.display_image()
 
     # контраст
     def contrast(self):
-        contrast = float(self.contrast_entry.get())
+        if self.current_image is not None:
+            contrast = float(self.contrast_entry.get())
         
-        after_c = cv2.convertScaleAbs(self.current_image, alpha=contrast)
-        self.current_image = after_c
-        self.display_image()
+            after_c = cv2.convertScaleAbs(self.current_image, alpha=contrast)
+            self.current_image = after_c
+            self.display_image()
 
     # резкость
     def sharpen_image(self):
-        kernel = np.array([[-1, -1, -1],
-                          [-1, 9, -1],
-                          [-1, -1, -1]])
-        sharpened = cv2.filter2D(self.current_image, -1, kernel)
-        self.current_image = sharpened
-        self.display_image()
+        if self.current_image is not None:
+            kernel = np.array([[-1, -1, -1],
+                               [-1, 9, -1],
+                               [-1, -1, -1]])
+            sharpened = cv2.filter2D(self.current_image, -1, kernel)
+            self.current_image = sharpened
+            self.display_image()
     
     # На разные цветовые каналы
     def split_channels(self, channel):
@@ -308,41 +312,46 @@ class proektik:
     
     # борьба с шумами
     def median_blur(self):
-        filtered = cv2.medianBlur(self.current_image, 3)
-        self.current_image = filtered
-        self.display_image()
+        if self.current_image is not None:
+            filtered = cv2.medianBlur(self.current_image, 3)
+            self.current_image = filtered
+            self.display_image()
     
     def gaussian_blur(self):
-        filtered = cv2.GaussianBlur(self.current_image, (3, 3), 0)
-        self.current_image = filtered
-        self.display_image()
+        if self.current_image is not None:
+            filtered = cv2.GaussianBlur(self.current_image, (3, 3), 0)
+            self.current_image = filtered
+            self.display_image()
 
     # перевод в другие форматы
     def to_HSV(self):
-        hsv = cv2.cvtColor(self.current_image, cv2.COLOR_BGR2HSV)
-        self.current_image = hsv
-        self.display_image()
+        if self.current_image is not None:
+            hsv = cv2.cvtColor(self.current_image, cv2.COLOR_BGR2HSV)
+            self.current_image = hsv
+            self.display_image()
 
     def to_grayscale(self):
-        grayscale = cv2.cvtColor(self.current_image, cv2.COLOR_BGR2GRAY)
-        self.current_image = grayscale
-        self.display_image()
-
+        if self.current_image is not None:
+            grayscale = cv2.cvtColor(self.current_image, cv2.COLOR_BGR2GRAY)
+            self.current_image = grayscale
+            self.display_image()
+    # маска для выделения цвета в хсв модели
     def hsv_mask(self):
-        lowhsv = self.LowHSV_entry.get()
-        lowH, lowS, lowV = [int(x) for x in lowhsv.split()]
+        if self.current_image is not None:
+            lowhsv = self.LowHSV_entry.get()
+            lowH, lowS, lowV = [int(x) for x in lowhsv.split()]
 
-        highhsv = self.HighHSV_entry.get()
-        highH, highS, highV = [int(x) for x in highhsv.split()]
+            highhsv = self.HighHSV_entry.get()
+            highH, highS, highV = [int(x) for x in highhsv.split()]
 
-        lower = np.array([lowH, lowS, lowV])
-        higher = np.array([highH, highS, highV])
+            lower = np.array([lowH, lowS, lowV])
+            higher = np.array([highH, highS, highV])
 
-        #hsv = cv2.cvtColor(self.current_image, cv2.COLOR_BGR2HSV)
-        mask = cv2.inRange(self.current_image, lower, higher)
-        masked = cv2.bitwise_and(self.current_image, self.current_image, mask=mask)
-        self.current_image = masked
-        self.display_image()
+            #hsv = cv2.cvtColor(self.current_image, cv2.COLOR_BGR2HSV)
+            mask = cv2.inRange(self.current_image, lower, higher)
+            masked = cv2.bitwise_and(self.current_image, self.current_image, mask=mask)
+            self.current_image = masked
+            self.display_image()
 
 def main():
     root = tk.Tk()
@@ -350,5 +359,4 @@ def main():
     root.mainloop()
 
 if __name__ == "__main__":
-
     main()
