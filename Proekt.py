@@ -346,7 +346,9 @@ class proektik:
 
 def main():
     root = tk.Tk()
+    app = proektik(root)
     root.mainloop()
 
 if __name__ == "__main__":
+
     main()
