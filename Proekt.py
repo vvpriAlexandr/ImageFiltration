@@ -207,7 +207,7 @@ class proektik:
                 gray = self.current_image
                 
             # метод Оцу
-            _, thresholded = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)
+            _, thresholded = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
             self.current_image = thresholded
             self.display_image()
     
@@ -360,3 +360,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
